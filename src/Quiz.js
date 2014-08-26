@@ -171,11 +171,8 @@ Quiz.prototype.hint = function () {
                 case 1:
                     self.emitter.emit('message', self.reveal(self.question.answer, [4]));
                     break;
-                case 2:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
-                    break;
                 default:
-                    self.emitter.emit('message', 'Je n\'ai plus rien à donner.');
+                    self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
                     break;
             }
 
@@ -183,8 +180,18 @@ Quiz.prototype.hint = function () {
             self.question.hints.given += 1;
             self.question.hints.date = new Date();
         } else {
-            // we can't next to soon (avoid abuse)
-            self.emitter.emit('message', 'Tentez de chercher avant, ça pourrait être intéressant.');
+            // repeat last
+            switch (self.question.hints.given) {
+                case 1:
+                    self.emitter.emit('message', self.reveal(self.question.answer, [0]));
+                    break;
+                case 2:
+                    self.emitter.emit('message', self.reveal(self.question.answer, [4]));
+                    break;
+                default:
+                    self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
+                    break;
+            }
         }
     } else {
         // we can't stop anything
