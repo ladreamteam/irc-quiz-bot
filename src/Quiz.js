@@ -319,11 +319,11 @@ Quiz.prototype.reveal = function (string, every) {
     var _string = this.normalize(string).replace(/[^\W_]/gi, '*').split('');
 
     for (var i = 1; i <= _string.length; i++) {
-        var isRevealed = true;
+        var isRevealed = false;
 
         // check if we need to reveal
         for (var y = 0; y < every.length; y++) {
-            isRevealed = isRevealed && (i % every[y] === 0);
+            isRevealed = isRevealed || (i % every[y] === 0);
         }
 
         // if to reveal
