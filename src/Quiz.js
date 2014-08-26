@@ -166,13 +166,13 @@ Quiz.prototype.hint = function () {
             // give more hints everytime
             switch (self.question.hints.given) {
                 case 0:
-                    self.emitter.emit('message', self.reveal(self.question.answer, 0));
+                    self.emitter.emit('message', self.reveal(self.question.answer, [0]));
                     break;
                 case 1:
-                    self.emitter.emit('message', self.reveal(self.question.answer, 5));
+                    self.emitter.emit('message', self.reveal(self.question.answer, [4]));
                     break;
                 case 2:
-                    self.emitter.emit('message', self.reveal(self.question.answer, 3));
+                    self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
                     break;
                 default:
                     self.emitter.emit('message', 'Je n\'ai plus rien à donner.');
@@ -319,7 +319,15 @@ Quiz.prototype.reveal = function (string, every) {
     var _string = this.normalize(string).replace(/[^\W_]/gi, '*').split('');
 
     for (var i = 1; i <= _string.length; i++) {
-        if (i % every === 0) { // can NaN
+        var isRevealed = true;
+
+        // check if we need to reveal
+        for (var y = 0; y < every.length; y++) {
+            isRevealed = isRevealed && (i % every[y] === 0);
+        }
+
+        // if to reveal
+        if (isRevealed) {
             _string[i] = string[i];
         }
     }
