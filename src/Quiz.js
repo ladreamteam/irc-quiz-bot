@@ -271,7 +271,7 @@ Quiz.prototype.compare = function (name, answer) {
             }
 
             // save the file
-            fs.writeFile(self.pFile, self.players);
+            fs.writeFile(self.pFile, JSON.stringify(self.players));
 
             // reset current and start a new one after 15s
             self.question = null;
