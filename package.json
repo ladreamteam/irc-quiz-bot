@@ -1,0 +1,7 @@
+{
+    "name": "quizzbot",
+    "main": "index.js",
+    "dependencies": {
+        "irc": "~0.3"
+    }
+}

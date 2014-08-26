@@ -1,0 +1,7 @@
+{
+    "irc": {
+        "host": "irc.example.com",
+        "nick": "nick",
+        "channel": "#chan"
+    }
+}
