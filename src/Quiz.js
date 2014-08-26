@@ -125,7 +125,7 @@ Quiz.prototype.start = function () {
             // return the title
             self.emitter.emit('message', self.question.title);
         } else {
-            // if there is no question av²ailable, just notify
+            // if there is no question available, just notify
             self.emitter.emit('message', 'Je n\'ai plus aucune question.');
         }
     } else {
