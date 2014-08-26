@@ -160,38 +160,29 @@ Quiz.prototype.hint = function () {
     var self = this;
 
     if (self.question !== null) {
-        // wait 10s before !hint possible
         var date = self.question.hints.date;
-        if ((new Date()) >= (new Date(date.getTime())).setSeconds(date.getSeconds() + 10)) {
-            // give more hints everytime
-            switch (self.question.hints.given) {
-                case 0:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [0]));
-                    break;
-                case 1:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [4]));
-                    break;
-                default:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
-                    break;
-            }
 
+        // wait 10s before !hint possible
+        if ((new Date()) >= (new Date(date.getTime())).setSeconds(date.getSeconds() + 10)) {
             // save that we gave an hint
             self.question.hints.given += 1;
             self.question.hints.date = new Date();
-        } else {
-            // repeat last
-            switch (self.question.hints.given) {
-                case 1:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [0]));
-                    break;
-                case 2:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [4]));
-                    break;
-                default:
-                    self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
-                    break;
-            }
+        }
+
+        // repeat always the same thing
+        switch (self.question.hints.given - 1) {
+            case 0:
+                self.emitter.emit('message', self.reveal(self.question.answer, [0]));
+                break;
+            case 1:
+                self.emitter.emit('message', self.reveal(self.question.answer, [4]));
+                break;
+            case 2:
+                self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
+                break;
+            default :
+                self.emitter.emit('message', 'Je n\'ai pas les moyens de vous aider pour le moment (ou à jamais).');
+                break;
         }
     } else {
         // we can't stop anything
