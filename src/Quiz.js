@@ -44,7 +44,11 @@ function Quiz() {
      *   "started": "2014-01-01Z00:00:00",
      *   "hints": {
      *     "given": 0,
-     *     "date": "2014-01-01Z00:00:00"
+     *     "date": "2014-01-01Z00:00:00",
+     *     "string" : [m,*, ,b,*,t,*,e]
+     *     "letters" : 7,
+     *     "positions" : [0,3,5,7]
+     *
      *   }
      * }
      * @type {null|{}}
@@ -120,7 +124,7 @@ Quiz.prototype.start = function () {
             // pick a random question and send it back
             self.question = self.questions[Math.floor(Math.random() * self.questions.length)];
             self.question.started = new Date();
-            self.question.hints = {"given": 0, "date": self.question.started};
+            self.question.hints = {"given": 0, "date": self.question.started, "string":"", "letters":0 , "positions":[] };
 
             // return the title
             self.message(self.question.title);
@@ -189,13 +193,13 @@ Quiz.prototype.hint = function () {
         // repeat always the same thing
         switch (self.question.hints.given - 1) {
             case 0:
-                self.message(self.reveal(self.question.answer, [0]));
+                self.message(self.reveal(self.question.answer, 0));
                 break;
             case 1:
-                self.message(self.reveal(self.question.answer, [4]));
+                self.message(self.reveal(self.question.answer, 1/3));
                 break;
             case 2:
-                self.message(self.reveal(self.question.answer, [4, 2]));
+                self.message(self.reveal(self.question.answer, 1/2));
                 break;
             default :
                 self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou pour toujours).');
@@ -356,21 +360,55 @@ Quiz.prototype.normalize = function (string) {
  *
  * @returns {string}
  */
-Quiz.prototype.reveal = function (string, every) {
+//Quiz.prototype.revealOrigin = function (string, every) {
+//    'use strict';
+//    var self = this;
+//
+//    var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
+//
+//    for (var i = 1; i <= string.length; i++) {
+//        var revealed = false;
+//        for (var y = 0; ((y < every.length) && !revealed); y++) {
+//            if (revealed = (i % every[y] === 0)) {
+//                _string[i - 1] = string[i - 1]
+//            }
+//        }
+//    }
+//
+//    return _string.join('');
+//};
+
+/**
+ * Reveals a random portion of the string.
+ *
+ * @param string
+ * @param ratio
+ *
+ * @returns {string}
+ */
+Quiz.prototype.reveal = function (string, ratio) {
     'use strict';
     var self = this;
 
-    var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
+    if (self.question.hints.string != "") {
+        var _string = self.question.hints.string;
+    } else var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
 
-    for (var i = 1; i <= string.length; i++) {
-        var revealed = false;
-        for (var y = 0; ((y < every.length) && !revealed); y++) {
-            if (revealed = (i % every[y] === 0)) {
-                _string[i - 1] = string[i - 1]
-            }
+
+    var nblettres = string.split(/[^\W_]/gi).length - 1 ;
+
+    while( self.question.hints.letters < Math.floor(nblettres * ratio))
+    {
+        var rand = Math.floor(Math.random() * _string.length) ; //A random position in the string
+        if(_string[rand] === '*' && self.question.hints.positions.indexOf(rand) === -1 )
+        {
+            _string[rand] = string[rand];
+            self.question.hints.positions.push(rand);
+            self.question.hints.letters++;
         }
     }
 
+    self.question.hints.string = _string;
     return _string.join('');
 };
 
