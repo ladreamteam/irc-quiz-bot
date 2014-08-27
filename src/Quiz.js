@@ -123,19 +123,14 @@ Quiz.prototype.start = function () {
             self.question.hints = {"given": 0, "date": self.question.started};
 
             // return the title
-           self.message(self.question.title);
+            self.message(self.question.title);
         } else {
-<<<<<<< HEAD
-            // if there is no question av²ailable, just notify
-           self.message('Je n\'ai plus aucune question.');
-=======
             // if there is no question available, just notify
-            self.emitter.emit('message', 'Je n\'ai plus aucune question.');
->>>>>>> 37b956c1279d8ac25707b2cdb825b2cf15f0abfd
+            self.message('Je n\'ai plus aucune question.');
         }
     } else {
         // we can't run 2 questions at the same time
-       self.message('Je suis déjà en train de poser des questions.');
+        self.message('Je suis déjà en train de poser des questions.');
     }
 };
 
@@ -150,10 +145,10 @@ Quiz.prototype.stop = function () {
     if (self.question !== null) {
         // remove it
         self.question = null;
-       self.message('Je vois que les incultes ne veulent plus parfaire leur culture.');
+        self.message('Je vois que les incultes ne veulent plus parfaire leur culture.');
     } else {
         // we can't stop anything
-       self.message('Je ne pose aucune question actuellement.');
+        self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -169,7 +164,7 @@ Quiz.prototype.repeat = function () {
         self.message(self.question.title);
     } else {
         // we can't stop anything
-       self.message('Je ne pose aucune question actuellement.');
+        self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -193,21 +188,21 @@ Quiz.prototype.hint = function () {
         // repeat always the same thing
         switch (self.question.hints.given - 1) {
             case 0:
-               self.message(self.reveal(self.question.answer, [0]));
+                self.message(self.reveal(self.question.answer, [0]));
                 break;
             case 1:
-               self.message(self.reveal(self.question.answer, [4]));
+                self.message(self.reveal(self.question.answer, [4]));
                 break;
             case 2:
-               self.message(self.reveal(self.question.answer, [4, 2]));
+                self.message(self.reveal(self.question.answer, [4, 2]));
                 break;
             default :
-               self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou pour toujours).');
+                self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou pour toujours).');
                 break;
         }
     } else {
         // we can't stop anything
-       self.message('Je ne pose aucune question actuellement.');
+        self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -223,8 +218,8 @@ Quiz.prototype.next = function () {
         var started = self.question.started;
         if ((new Date()) >= (new Date(started.getTime())).setSeconds(started.getSeconds() + 15)) {
             // send the answer, to bring some knowledge
-           self.message(util.format('La réponse était : %s.', self.question.answer));
-           self.message('Prochaine question dans 15 secondes.');
+            self.message(util.format('La réponse était : %s.', self.question.answer));
+            self.message('Prochaine question dans 15 secondes.');
 
             // reset current and start a new one after 15s
             self.question = null;
@@ -233,11 +228,11 @@ Quiz.prototype.next = function () {
             }, 15 * 1000);
         } else {
             // we can't next to soon (avoid abuse)
-           self.message('Tentez de chercher avant, ça pourrait être intéressant.');
+            self.message('Tentez de chercher avant, ça pourrait être intéressant.');
         }
     } else {
         // we can't stop anything
-       self.message('Je ne pose aucune question actuellement.');
+        self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -255,7 +250,7 @@ Quiz.prototype.ladder = function () {
 
     // only get the 5 best
     for (var i = 0; ((i < 5) && (i < self.players.length)); i++) {
-       self.message(util.format('%s. %s (%s)', (i + 1), self.players[i].name, self.players[i].score));
+        self.message(util.format('%s. %s (%s)', (i + 1), self.players[i].name, self.players[i].score));
     }
 };
 
@@ -282,8 +277,8 @@ Quiz.prototype.compare = function (name, answer) {
     if (self.question !== null) {
         // if the answer matches the real answer (without any accented char)
         if (self.normalize(self.question.answer) === self.normalize(answer)) {
-           self.message(util.format('Bravo %s ! La réponse était : %s.', name, self.question.answer));
-           self.message('Prochaine question dans 15 secondes.');
+            self.message(util.format('Bravo %s ! La réponse était : %s.', name, self.question.answer));
+            self.message('Prochaine question dans 15 secondes.');
 
             // add point (use some to short circuit)
             var add = function (element) {
