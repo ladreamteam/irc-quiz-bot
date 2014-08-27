@@ -123,14 +123,14 @@ Quiz.prototype.start = function () {
             self.question.hints = {"given": 0, "date": self.question.started};
 
             // return the title
-            self.emitter.emit('message', self.question.title);
+           self.message(self.question.title);
         } else {
             // if there is no question av²ailable, just notify
-            self.emitter.emit('message', 'Je n\'ai plus aucune question.');
+           self.message('Je n\'ai plus aucune question.');
         }
     } else {
         // we can't run 2 questions at the same time
-        self.emitter.emit('message', 'Je suis déjà en train de poser des questions.');
+       self.message('Je suis déjà en train de poser des questions.');
     }
 };
 
@@ -145,10 +145,10 @@ Quiz.prototype.stop = function () {
     if (self.question !== null) {
         // remove it
         self.question = null;
-        self.emitter.emit('message', 'Je vois que les incultes ne veulent plus parfaire leur culture.');
+       self.message('Je vois que les incultes ne veulent plus parfaire leur culture.');
     } else {
         // we can't stop anything
-        self.emitter.emit('message', 'Je ne pose aucune question actuellement.');
+       self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -172,21 +172,21 @@ Quiz.prototype.hint = function () {
         // repeat always the same thing
         switch (self.question.hints.given - 1) {
             case 0:
-                self.emitter.emit('message', self.reveal(self.question.answer, [0]));
+               self.message(self.reveal(self.question.answer, [0]));
                 break;
             case 1:
-                self.emitter.emit('message', self.reveal(self.question.answer, [4]));
+               self.message(self.reveal(self.question.answer, [4]));
                 break;
             case 2:
-                self.emitter.emit('message', self.reveal(self.question.answer, [4, 2]));
+               self.message(self.reveal(self.question.answer, [4, 2]));
                 break;
             default :
-                self.emitter.emit('message', 'Je n\'ai pas les moyens de vous aider pour le moment (ou à jamais).');
+               self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou à jamais).');
                 break;
         }
     } else {
         // we can't stop anything
-        self.emitter.emit('message', 'Je ne pose aucune question actuellement.');
+       self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -202,8 +202,8 @@ Quiz.prototype.next = function () {
         var started = self.question.started;
         if ((new Date()) >= (new Date(started.getTime())).setSeconds(started.getSeconds() + 15)) {
             // send the answer, to bring some knowledge
-            self.emitter.emit('message', util.format('La réponse était : %s.', self.question.answer));
-            self.emitter.emit('message', 'Prochaine question dans 15 secondes.');
+           self.message(util.format('La réponse était : %s.', self.question.answer));
+           self.message('Prochaine question dans 15 secondes.');
 
             // reset current and start a new one after 15s
             self.question = null;
@@ -212,11 +212,11 @@ Quiz.prototype.next = function () {
             }, 15 * 1000);
         } else {
             // we can't next to soon (avoid abuse)
-            self.emitter.emit('message', 'Tentez de chercher avant, ça pourrait être intéressant.');
+           self.message('Tentez de chercher avant, ça pourrait être intéressant.');
         }
     } else {
         // we can't stop anything
-        self.emitter.emit('message', 'Je ne pose aucune question actuellement.');
+       self.message('Je ne pose aucune question actuellement.');
     }
 };
 
@@ -234,7 +234,7 @@ Quiz.prototype.ladder = function () {
 
     // only get the 5 best
     for (var i = 0; ((i < 5) && (i < self.players.length)); i++) {
-        self.emitter.emit('message', util.format('%s. %s (%s)', (i + 1), self.players[i].name, self.players[i].score));
+       self.message(util.format('%s. %s (%s)', (i + 1), self.players[i].name, self.players[i].score));
     }
 };
 
@@ -251,8 +251,8 @@ Quiz.prototype.compare = function (name, answer) {
     if (self.question !== null) {
         // if the answer matches the real answer (without any accented char)
         if (self.normalize(self.question.answer) === self.normalize(answer)) {
-            self.emitter.emit('message', util.format('Bravo %s ! La réponse était : %s.', name, self.question.answer));
-            self.emitter.emit('message', 'Prochaine question dans 15 secondes.');
+           self.message(util.format('Bravo %s ! La réponse était : %s.', name, self.question.answer));
+           self.message('Prochaine question dans 15 secondes.');
 
             // add point (use some to short circuit)
             var add = function (element) {
@@ -281,6 +281,18 @@ Quiz.prototype.compare = function (name, answer) {
 };
 
 /**
+ * Emits a "message" event.
+ *
+ * @param message
+ */
+Quiz.prototype.message = function (message) {
+    'use strict';
+    var self = this;
+
+    self.emitter.emit('message', message);
+};
+
+/**
  * Return a new string without all accented char from var string.
  *
  * @param string
@@ -288,6 +300,7 @@ Quiz.prototype.compare = function (name, answer) {
  * @returns {string}
  */
 Quiz.prototype.normalize = function (string) {
+    'use strict';
 
     var accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
     var _accents = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
@@ -313,8 +326,10 @@ Quiz.prototype.normalize = function (string) {
  * @returns {string}
  */
 Quiz.prototype.reveal = function (string, every) {
+    'use strict';
+    var self = this;
 
-    var _string = this.normalize(string).replace(/[^\W_]/gi, '*').split('');
+    var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
 
     for (var i = 1; i <= _string.length; i++) {
         var isRevealed = false;
