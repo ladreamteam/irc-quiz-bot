@@ -2,6 +2,7 @@
     "name": "quizzbot",
     "main": "index.js",
     "dependencies": {
-        "irc": "~0.3"
+        "irc": "~0.3",
+        "irc-colors": "~1.1"
     }
 }

@@ -1,5 +1,6 @@
 var Quiz = require('./Quiz');
 var irc = require('irc');
+var colors = require('irc-colors');
 
 /**
  * QuiZz class
@@ -39,14 +40,14 @@ function QuiZz(host, nick, channel) {
                 self.quiz.ladder();
                 break;
             default :
-                self.quiz.compare(from, message);
+                self.quiz.compare(from, colors.stripColorsAndStyle(message));
                 break;
         }
     });
 
     // when the quizz want to answer
     this.quiz.emitter.on('message', function (message) {
-        self.client.say(channel, message);
+        self.client.say(channel, colors.bold.red(message));
     });
 }
 
