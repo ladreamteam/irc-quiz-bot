@@ -125,8 +125,13 @@ Quiz.prototype.start = function () {
             // return the title
            self.message(self.question.title);
         } else {
+<<<<<<< HEAD
             // if there is no question av²ailable, just notify
            self.message('Je n\'ai plus aucune question.');
+=======
+            // if there is no question available, just notify
+            self.emitter.emit('message', 'Je n\'ai plus aucune question.');
+>>>>>>> 37b956c1279d8ac25707b2cdb825b2cf15f0abfd
         }
     } else {
         // we can't run 2 questions at the same time
