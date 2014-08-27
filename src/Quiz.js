@@ -278,11 +278,18 @@ Quiz.prototype.compare = function (name, answer) {
     if (self.question !== null) {
         // if the answer matches the real answer (without any accented char)
         if (self.normalize(self.question.answer) === self.normalize(answer)) {
-            self.message(util.format('Bravo %s ! La réponse était : %s.', name, self.question.answer));
-            self.message('Prochaine question dans 15 secondes.');
 
             // how many points ?
             var points = 4 - self.question.hints.given;
+
+            self.message(util.format('Bravo %s ! La réponse était : %s, pour %s points.', name, self.question.answer, points));
+            self.message('Prochaine question dans 15 secondes.');
+
+            // reset current and start a new one after 15s
+            self.question = null;
+            setTimeout(function () {
+                self.start();
+            }, 15 * 1000);
 
             // add point (use some to short circuit)
             var add = function (element) {
@@ -300,12 +307,6 @@ Quiz.prototype.compare = function (name, answer) {
 
             // save the file
             fs.writeFile(self.pFile, JSON.stringify(self.players));
-
-            // reset current and start a new one after 15s
-            self.question = null;
-            setTimeout(function () {
-                self.start();
-            }, 15 * 1000);
         }
     }
 };
