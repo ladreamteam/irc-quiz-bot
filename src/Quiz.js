@@ -107,7 +107,7 @@ Quiz.prototype.initPlayers = function (filename) {
 };
 
 /**
- * Starts the quiz.
+ * Starts a new question.
  */
 Quiz.prototype.start = function () {
     'use strict';
@@ -135,7 +135,7 @@ Quiz.prototype.start = function () {
 };
 
 /**
- * Stops the quiz.
+ * Stops the current question.
  */
 Quiz.prototype.stop = function () {
     'use strict';
@@ -179,7 +179,8 @@ Quiz.prototype.hint = function () {
         var date = self.question.hints.date;
 
         // wait 10s before !hint possible
-        if ((new Date()) >= (new Date(date.getTime())).setSeconds(date.getSeconds() + 10)) {
+        if (((new Date()) >= (new Date(date.getTime())).setSeconds(date.getSeconds() + 10))
+            && self.question.hints.given < 3) {
             // save that we gave an hint
             self.question.hints.given += 1;
             self.question.hints.date = new Date();
