@@ -181,7 +181,7 @@ Quiz.prototype.hint = function () {
                self.message(self.reveal(self.question.answer, [4, 2]));
                 break;
             default :
-               self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou à jamais).');
+               self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou pour toujours).');
                 break;
         }
     } else {
