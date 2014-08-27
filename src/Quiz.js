@@ -281,10 +281,13 @@ Quiz.prototype.compare = function (name, answer) {
             self.message(util.format('Bravo %s ! La réponse était : %s.', name, self.question.answer));
             self.message('Prochaine question dans 15 secondes.');
 
+            // how many points ?
+            var points = 4 - self.question.hints.given;
+
             // add point (use some to short circuit)
             var add = function (element) {
                 if (element.name === name) {
-                    element.score += 1;
+                    element.score += points;
                     return true;
                 }
                 return false;
@@ -292,7 +295,7 @@ Quiz.prototype.compare = function (name, answer) {
 
             // use it to insert or update
             if (!self.players.some(add)) {
-                self.players.push({"name": name, "score": 1});
+                self.players.push({"name": name, "score": points});
             }
 
             // save the file
