@@ -153,6 +153,22 @@ Quiz.prototype.stop = function () {
 };
 
 /**
+ * Repeats the question.
+ */
+Quiz.prototype.repeat = function () {
+    'use strict';
+    var self = this;
+
+    if (self.question !== null) {
+        // just send back the question
+        self.message(self.question.title);
+    } else {
+        // we can't stop anything
+       self.message('Je ne pose aucune question actuellement.');
+    }
+};
+
+/**
  * Gives an hint to the current question
  */
 Quiz.prototype.hint = function () {
@@ -236,6 +252,16 @@ Quiz.prototype.ladder = function () {
     for (var i = 0; ((i < 5) && (i < self.players.length)); i++) {
        self.message(util.format('%s. %s (%s)', (i + 1), self.players[i].name, self.players[i].score));
     }
+};
+
+/**
+ * Provides some help.
+ */
+Quiz.prototype.help = function () {
+    'use strict';
+    var self = this;
+
+    self.message('Commandes: !start, !stop, !repeat, !hint, !next, !ladder, !help.');
 };
 
 /**

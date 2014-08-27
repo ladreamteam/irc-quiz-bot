@@ -30,6 +30,9 @@ function QuiZz(host, nick, channel) {
             case '!stop':
                 self.quiz.stop();
                 break;
+            case '!repeat':
+                self.quiz.repeat();
+                break;
             case '!hint':
                 self.quiz.hint();
                 break;
@@ -38,6 +41,9 @@ function QuiZz(host, nick, channel) {
                 break;
             case '!ladder':
                 self.quiz.ladder();
+                break;
+            case '!help':
+                self.quiz.help();
                 break;
             default :
                 self.quiz.compare(from, colors.stripColorsAndStyle(message));
