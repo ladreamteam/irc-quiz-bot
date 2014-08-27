@@ -358,17 +358,12 @@ Quiz.prototype.reveal = function (string, every) {
 
     var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
 
-    for (var i = 1; i <= _string.length; i++) {
-        var isRevealed = false;
-
-        // check if we need to reveal
-        for (var y = 0; y < every.length; y++) {
-            isRevealed = isRevealed || (i % every[y] === 0);
-        }
-
-        // if to reveal
-        if (isRevealed) {
-            _string[i] = string[i];
+    for (var i = 1; i <= string.length; i++) {
+        var revealed = false;
+        for (var y = 0; ((y < every.length) && !revealed); y++) {
+            if (revealed = (i % every[y] === 0)) {
+                _string[i - 1] = string[i - 1]
+            }
         }
     }
 
