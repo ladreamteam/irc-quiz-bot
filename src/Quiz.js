@@ -63,21 +63,19 @@ function Quiz() {
     self.pFile = __dirname + '/../resources/players.json';
 
     // init
-    self.initQuestions(self.qFile);
-    self.initPlayers(self.pFile);
+    self.initQuestions();
+    self.initPlayers();
 }
 
 /**
  * Initializes the list of questions.
- *
- * @param filename the JSON Object file
  */
-Quiz.prototype.initQuestions = function (filename) {
+Quiz.prototype.initQuestions = function () {
     'use strict';
     var self = this;
 
     // read the file
-    fs.readFile(filename, function (error, data) {
+    fs.readFile(self.qFile, function (error, data) {
         // throw error if one
         if (error) {
             throw error;
@@ -90,15 +88,13 @@ Quiz.prototype.initQuestions = function (filename) {
 
 /**
  * Initializes the list of players.
- *
- * @param filename the JSON Object file
  */
-Quiz.prototype.initPlayers = function (filename) {
+Quiz.prototype.initPlayers = function () {
     'use strict';
     var self = this;
 
     // read the file
-    fs.readFile(filename, function (error, data) {
+    fs.readFile(self.pFile, function (error, data) {
         // throw error if one
         if (error) {
             throw error;
