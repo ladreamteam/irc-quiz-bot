@@ -21,15 +21,16 @@ function QuiZz(host, nick, channel) {
      */
     this.client = new irc.Client(host, nick, {"channels": [channel]});
 
+    // on join channel
+    this.client.addListener('join', function (c, n, message) {
+        if ((channel === c) && (nick === n)) {
+            self.quiz.start();
+        }
+    });
+
     // what to do when a message is received
     this.client.addListener('message', function (from, to, message) {
         switch (message) {
-            case '!start':
-                self.quiz.start();
-                break;
-            case '!stop':
-                self.quiz.stop();
-                break;
             case '!repeat':
                 self.quiz.repeat();
                 break;
@@ -49,6 +50,11 @@ function QuiZz(host, nick, channel) {
                 self.quiz.compare(from, colors.stripColorsAndStyle(message));
                 break;
         }
+    });
+
+    // on IRC errors
+    this.client.addListener('error', function (message) {
+        self.client.say(channel, colors.bold.magenta(message.command));
     });
 
     // when the quizz want to answer

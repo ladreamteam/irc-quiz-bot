@@ -141,24 +141,6 @@ Quiz.prototype.start = function () {
 };
 
 /**
- * Stops the current question.
- */
-Quiz.prototype.stop = function () {
-    'use strict';
-    var self = this;
-
-    // if there is a current question
-    if (self.question !== null) {
-        // remove it
-        self.question = null;
-        self.message('Je vois que les incultes ne veulent plus parfaire leur culture.');
-    } else {
-        // we can't stop anything
-        self.message('Je ne pose aucune question actuellement.');
-    }
-};
-
-/**
  * Repeats the question.
  */
 Quiz.prototype.repeat = function () {
@@ -268,7 +250,7 @@ Quiz.prototype.help = function () {
     'use strict';
     var self = this;
 
-    self.message('Commandes: !start, !stop, !repeat, !hint, !next, !ladder, !help.');
+    self.message('Commandes: !repeat, !hint, !next, !ladder, !help.');
 };
 
 /**
