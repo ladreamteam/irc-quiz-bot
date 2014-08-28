@@ -1,4 +1,3 @@
-var util = require('util');
 var config = require('./resources/config.json');
 var QuiZz = require('./src/QuiZz');
 
