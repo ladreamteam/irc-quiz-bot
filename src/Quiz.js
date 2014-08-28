@@ -39,15 +39,13 @@ function Quiz() {
 
     /**
      * {
-     *   "title": "?",
-     *   "answer": ".",
+     *   "title": "some question?",
+     *   "answer": "some answer",
      *   "started": "2014-01-01Z00:00:00",
      *   "hints": {
      *     "given": 0,
      *     "date": "2014-01-01Z00:00:00",
-     *     "string" : [m,*, ,b,*,t,*,e]
-     *     "letters" : 7,
-     *     "positions" : [0,3,5,7]
+     *     "revealed" : [0,3,5,7]
      *
      *   }
      * }
@@ -124,7 +122,11 @@ Quiz.prototype.start = function () {
             // pick a random question and send it back
             self.question = self.questions[Math.floor(Math.random() * self.questions.length)];
             self.question.started = new Date();
-            self.question.hints = {"given": 0, "date": self.question.started, "string":"", "letters":0 , "positions":[] };
+            self.question.hints = {
+                "given": 0,
+                "date": self.question.started,
+                "revealed": []
+            };
 
             // return the title
             self.message(self.question.title);
@@ -193,13 +195,13 @@ Quiz.prototype.hint = function () {
         // repeat always the same thing
         switch (self.question.hints.given - 1) {
             case 0:
-                self.message(self.reveal(self.question.answer, 0));
+                self.message(self.revealAnswer(0));
                 break;
             case 1:
-                self.message(self.reveal(self.question.answer, 1/3));
+                self.message(self.revealAnswer(1 / 3));
                 break;
             case 2:
-                self.message(self.reveal(self.question.answer, 1/2));
+                self.message(self.revealAnswer(1 / 2));
                 break;
             default :
                 self.message('Je n\'ai pas les moyens de vous aider pour le moment (ou pour toujours).');
@@ -353,62 +355,34 @@ Quiz.prototype.normalize = function (string) {
 };
 
 /**
- * Reveals a portion of the string.
- *
- * @param string
- * @param every
- *
- * @returns {string}
- */
-//Quiz.prototype.revealOrigin = function (string, every) {
-//    'use strict';
-//    var self = this;
-//
-//    var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
-//
-//    for (var i = 1; i <= string.length; i++) {
-//        var revealed = false;
-//        for (var y = 0; ((y < every.length) && !revealed); y++) {
-//            if (revealed = (i % every[y] === 0)) {
-//                _string[i - 1] = string[i - 1]
-//            }
-//        }
-//    }
-//
-//    return _string.join('');
-//};
-
-/**
  * Reveals a random portion of the string.
  *
- * @param string
  * @param ratio
  *
  * @returns {string}
  */
-Quiz.prototype.reveal = function (string, ratio) {
+Quiz.prototype.revealAnswer = function (ratio) {
     'use strict';
     var self = this;
 
-    if (self.question.hints.string != "") {
-        var _string = self.question.hints.string;
-    } else var _string = self.normalize(string).replace(/[^\W_]/gi, '*').split('');
+    // get already revealed letters and compute
+    // how many letters we need to have
+    var toReveal = Math.floor(ratio * self.question.answer.length);
+    var _string = self.normalize(self.question.answer).replace(/[^\W_]/gi, '*').split('');
 
-
-    var nblettres = string.split(/[^\W_]/gi).length - 1 ;
-
-    while( self.question.hints.letters < Math.floor(nblettres * ratio))
-    {
-        var rand = Math.floor(Math.random() * _string.length) ; //A random position in the string
-        if(_string[rand] === '*' && self.question.hints.positions.indexOf(rand) === -1 )
-        {
-            _string[rand] = string[rand];
-            self.question.hints.positions.push(rand);
-            self.question.hints.letters++;
+    // add some random letters
+    while (self.question.hints.revealed.length < toReveal) {
+        var rand = Math.floor(Math.random() * self.question.answer.length); //A random position in the string
+        if ((_string[rand] === '*') && (self.question.hints.revealed.indexOf(rand) === -1)) {
+            self.question.hints.revealed.push(rand);
         }
     }
 
-    self.question.hints.string = _string;
+    // remove *
+    for (var i = 0; i < self.question.hints.revealed.length; i++) {
+        _string[self.question.hints.revealed[i]] = self.question.answer[self.question.hints.revealed[i]];
+    }
+
     return _string.join('');
 };
 
