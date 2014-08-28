@@ -9,11 +9,12 @@ var events = require('events');
  */
 function Quiz() {
     'use strict';
+    var self = this;
 
     /**
      * @type {exports.EventEmitter}
      */
-    this.emitter = new events.EventEmitter();
+    self.emitter = new events.EventEmitter();
 
     /**
      * [
@@ -24,7 +25,7 @@ function Quiz() {
      * ]
      * @type {Array}
      */
-    this.questions = [];
+    self.questions = [];
 
     /**
      * [
@@ -35,7 +36,7 @@ function Quiz() {
      * ]
      * @type {Array}
      */
-    this.players = [];
+    self.players = [];
 
     /**
      * {
@@ -51,19 +52,19 @@ function Quiz() {
      * }
      * @type {null|{}}
      */
-    this.question = null;
+    self.question = null;
 
     /**
      * Files
      *
      * @type {string}
      */
-    this.qFile = __dirname + '/../resources/questions.json';
-    this.pFile = __dirname + '/../resources/players.json';
+    self.qFile = __dirname + '/../resources/questions.json';
+    self.pFile = __dirname + '/../resources/players.json';
 
     // init
-    this.initQuestions(this.qFile);
-    this.initPlayers(this.pFile);
+    self.initQuestions(self.qFile);
+    self.initPlayers(self.pFile);
 }
 
 /**
