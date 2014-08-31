@@ -7,7 +7,7 @@ var colors = require('irc-colors');
  *
  * @constructor
  */
-function QuiZz(host, nick, channel) {
+function QuiZz(options) {
     'use strict';
     var self = this;
 
@@ -19,12 +19,23 @@ function QuiZz(host, nick, channel) {
     /**
      * @type {irc.Client}
      */
-    self.client = new irc.Client(host, nick, {"channels": [channel]});
+    self.client = new irc.Client(null, null, options);
+
+    // NS ID ?
+    self.identified = false;
 
     // on join channel
     self.client.addListener('join', function (c, n, message) {
-        if ((channel === c) && (nick === n)) {
-            self.quiz.start();
+        if (self.identified) {
+            if ((options.channels[0] === c) && (options.nick === n)) {
+                self.quiz.start();
+            }
+        }
+        else {
+            self.identified = true;
+            self.client.say('NickServ', 'IDENTIFY ' + options.password);
+            self.client.part(c);
+            self.client.join(c);
         }
     });
 
@@ -53,13 +64,14 @@ function QuiZz(host, nick, channel) {
     });
 
     // on IRC errors
-    self.client.addListener('error', function (message) {
-        self.client.say(channel, colors.bold.magenta(message.command));
+    self.client.addListener('error', function (error) {
+        self.client.say(options.channels[0], colors.bold.green(error.command));
+        console.log(error);
     });
 
     // when the quizz want to answer
     self.quiz.emitter.on('message', function (message) {
-        self.client.say(channel, colors.bold.red(message));
+        self.client.say(options.channels[0], colors.bold.red(message));
     });
 }
 
